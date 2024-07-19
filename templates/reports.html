@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reports</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin: 0;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .container {
+            width: 50%;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            animation: slideIn 1s ease-out;
+            text-align: center;
+        }
+
+        p {
+            font-size: 18px;
+            color: #333;
+            margin: 20px 0;
+            transition: color 0.3s ease;
+        }
+
+        p:hover {
+            color: #4CAF50;
+        }
+
+        a {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        a:active {
+            background-color: #388E3C;
+            transform: scale(0.95);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Hisobotlar</h1>
+    <div class="container">
+        <p>Umumiy Kirim: {{ total_income }}</p>
+        <p>Umumiy Chiqim: {{ total_expense }}</p>
+        <p>Balance: {{ balance }}</p>
+        <a href="{% url 'index' %}">Back</a>
+    </div>
+</body>
+</html>

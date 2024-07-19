@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Finance App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin: 0;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            animation: slideIn 1s ease-out;
+        }
+
+        p {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .button {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        .button:active {
+            background-color: #388E3C;
+            transform: scale(0.95);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            animation: fadeIn 1s ease-out;
+        }
+
+        li {
+            background-color: #e2e2e2;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            animation: fadeIn 1s ease-out;
+        }
+
+        li:hover {
+            background-color: #d4d4d4;
+            transform: scale(1.02);
+        }
+
+        .transaction-detail {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .transaction-detail div {
+            flex: 1;
+            text-align: center;
+        }
+
+        .chart-container {
+            width: 100%;
+            margin: 40px 0;
+        }
+
+        .chart {
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            margin: 0 10px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .tab:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        .tab.active {
+            background-color: #45a049;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: slideIn 1s ease-out;
+        }
+
+        .centered-content {
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Transactions</h1>
+    <div class="container">
+        <div class="centered-content">
+            <p>Balance: {{ balance }} so'm</p>
+            <a href="{% url 'add_transaction' %}" class="button">Add Transaction</a>
+            <a href="{% url 'reports' %}" class="button">Hisobot</a>
+            <a href="{% url 'transactions_by_date_range' %}" class="button">Vaqt oralig'idagi Hisob</a>
+
+
+        </div>
+
+        <div class="chart-container">
+            <canvas id="incomeExpenseChart" class="chart"></canvas>
+        </div>
+
+        <div class="tab-container">
+            <div class="tab active" onclick="showTab('income')">Kirim</div>
+            <div class="tab" onclick="showTab('expense')">Chiqim</div>
+        </div>
+
+        <div id="income" class="tab-content active">
+            <ul>
+                {% for transaction in transactions %}
+                    {% if transaction.type == 'IN' %}
+                        <li class="transaction-detail">
+                            <div>{{ transaction.date }}</div>
+                            <div>Kirim</div>
+                            <div>{{ transaction.amount }} so'm</div>
+                            <div>{{ transaction.hisob }}</div>
+                            <div>{{ transaction.category }}</div>
+                            <div>{{ transaction.description }}</div>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div id="expense" class="tab-content">
+            <ul>
+                {% for transaction in transactions %}
+                    {% if transaction.type == 'OUT' %}
+                        <li class="transaction-detail">
+                            <div>{{ transaction.date }}</div>
+                            <div>Chiqim</div>
+                            <div>{{ transaction.amount }} so'm</div>
+                            <div>{{ transaction.hisob }}</div>
+                            <div>{{ transaction.category }}</div>
+                            <div>{{ transaction.description }}</div>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var ctx = document.getElementById('incomeExpenseChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Income', 'Expense'],
+                    datasets: [{
+                        label: 'Amount',
+                        data: [{{ total_income }}, {{ total_expense }}],
+                        backgroundColor: ['#4CAF50', '#FF5733'],
+                        borderColor: ['#388E3C', '#C70039'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#ddd',
+                                borderColor: '#ddd'
+                            },
+                            ticks: {
+                                color: '#333'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: '#ddd',
+                                borderColor: '#ddd'
+                            },
+                            ticks: {
+                                color: '#333'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#333'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#333',
+                            titleColor: '#fff',
+                            bodyColor: '#fff'
+                        }
+                    }
+                }
+            });
+
+            function showTab(tab) {
+                document.querySelectorAll('.tab').forEach(function(tabElement) {
+                    tabElement.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-content').forEach(function(tabContent) {
+                    tabContent.classList.remove('active');
+                });
+
+                document.querySelector('.tab[onclick="showTab(\'' + tab + '\')"]').classList.add('active');
+                document.getElementById(tab).classList.add('active');
+            }
+
+            window.showTab = showTab;
+        });
+    </script>
+</body>
+</html>
