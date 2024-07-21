@@ -7,11 +7,20 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #5c7ccd, #227465);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        h1 {
-            background-color: #4CAF50;
+        .header {
+            position: relative;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            background: linear-gradient(135deg, #95b1f4, #48a76c);
             color: white;
             padding: 20px;
             text-align: center;
@@ -19,21 +28,62 @@
             animation: fadeIn 1s ease-out;
         }
 
-        .container {
-            width: 80%;
+        .profile-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: white;
+            color: #4CAF50;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-link:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 90%;
             margin: 20px auto;
             padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #a1b8f0, #48a796);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border-radius: 10px;
             animation: slideIn 1s ease-out;
+            flex: 1;
+        }
+
+        .info-container, .chart-container {
+            margin: 10px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-container {
+            width: 60%;
+            background: linear-gradient(135deg, #cad5f1, #a3eee0);
+        }
+
+        .chart-container {
+            width: 35%;
+            background: linear-gradient(135deg, #cad5f1, #a3eee0);
         }
 
         p {
             font-size: 18px;
             color: #333;
             text-align: center;
-            animation: fadeIn 1s ease-out;
+            margin: 10px 0;
+            transition: color 0.3s ease;
         }
 
         .button {
@@ -47,7 +97,7 @@
             font-size: 18px;
             font-weight: bold;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            animation: fadeIn 1s ease-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .button:hover {
@@ -63,7 +113,6 @@
         ul {
             list-style: none;
             padding: 0;
-            animation: fadeIn 1s ease-out;
         }
 
         li {
@@ -72,7 +121,7 @@
             padding: 10px;
             border-radius: 5px;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            animation: fadeIn 1s ease-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         li:hover {
@@ -90,16 +139,11 @@
             text-align: center;
         }
 
-        .chart-container {
-            width: 100%;
-            margin: 40px 0;
-        }
-
         .chart {
             width: 100%;
             height: 400px;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .tab-container {
@@ -116,7 +160,7 @@
             cursor: pointer;
             border-radius: 10px;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            animation: fadeIn 1s ease-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .tab:hover {
@@ -139,6 +183,33 @@
 
         .centered-content {
             text-align: center;
+        }
+
+        .category-expense-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .category-expense {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            animation: fadeIn 1s ease-out, slideIn 1s ease-out;
+            display: flex;
+            align-items: center;
+        }
+
+        .category-expense svg {
+            margin-right: 10px;
+        }
+
+        .category-expense:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.02);
         }
 
         /* Animations */
@@ -165,58 +236,76 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Transactions</h1>
-    <div class="container">
-        <div class="centered-content">
-            <p>Balance: {{ balance }} so'm</p>
-            <a href="{% url 'add_transaction' %}" class="button">Add Transaction</a>
-            <a href="{% url 'reports' %}" class="button">Hisobot</a>
-            <a href="{% url 'transactions_by_date_range' %}" class="button">Vaqt oralig'idagi Hisob</a>
+    <div class="header">
+        <h1>Transactions</h1>
+        <a href="{% url 'profile' %}" class="profile-link">Profile</a>
+    </div>
+    <div class="main-container">
+        <div class="info-container">
+            <div class="centered-content">
+                <p>Balance: {{ balance }} so'm</p>
+                <a href="{% url 'add_transaction' %}" class="button">Add Transaction</a>
+                <a href="{% url 'reports' %}" class="button">Hisobot</a>
+                <a href="{% url 'transactions_by_date_range' %}" class="button">Vaqt oralig'idagi Hisob</a>
+            </div>
 
+            <div class="tab-container">
+                <div class="tab active" onclick="showTab('income')">Kirim</div>
+                <div class="tab" onclick="showTab('expense')">Chiqim</div>
+            </div>
 
+            <div id="income" class="tab-content active">
+                <ul>
+                    {% for transaction in transactions %}
+                        {% if transaction.type == 'IN' %}
+                            <li class="transaction-detail">
+                                <div>{{ transaction.date }}</div>
+                                <div>Kirim</div>
+                                <div>{{ transaction.amount }} so'm</div>
+                                <div>{{ transaction.hisob }}</div>
+                                <div>{{ transaction.category }}</div>
+                                <div>{{ transaction.description }}</div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div id="expense" class="tab-content">
+                <ul>
+                    {% for transaction in transactions %}
+                        {% if transaction.type == 'OUT' %}
+                            <li class="transaction-detail">
+                                <div>{{ transaction.date }}</div>
+                                <div>Chiqim</div>
+                                <div>{{ transaction.amount }} so'm</div>
+                                <div>{{ transaction.hisob }}</div>
+                                <div>{{ transaction.category }}</div>
+                                <div>{{ transaction.description }}</div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
 
         <div class="chart-container">
             <canvas id="incomeExpenseChart" class="chart"></canvas>
-        </div>
-
-        <div class="tab-container">
-            <div class="tab active" onclick="showTab('income')">Kirim</div>
-            <div class="tab" onclick="showTab('expense')">Chiqim</div>
-        </div>
-
-        <div id="income" class="tab-content active">
-            <ul>
-                {% for transaction in transactions %}
-                    {% if transaction.type == 'IN' %}
-                        <li class="transaction-detail">
-                            <div>{{ transaction.date }}</div>
-                            <div>Kirim</div>
-                            <div>{{ transaction.amount }} so'm</div>
-                            <div>{{ transaction.hisob }}</div>
-                            <div>{{ transaction.category }}</div>
-                            <div>{{ transaction.description }}</div>
-                        </li>
-                    {% endif %}
+            <div class="category-expense-container">
+                <h3 style="text-align:center">Outputs List</h3>
+                {% for i in category_expenses %}
+                    <div class="category-expense">
+                        {% if i.category__name == 'Transport' %}
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24"><path d="M246 928q-28 0-47-19t-19-47q0-28 19-47t47-19q28 0 47 19t19 47q0 28-19 47t-47 19Zm468 0q-28 0-47-19t-19-47q0-28 19-47t47-19q28 0 47 19t19 47q0 28-19 47t-47 19ZM180 736q-24 0-42-18t-18-42V420q0-83 47-138t130-69q18-48 60-77.5T512 106q56 0 98 29.5T670 213q82 10 131 64.5T850 420v256q0 24-18 42t-42 18H180Zm45-60h510V420q0-58-35-95t-95-37H355q-59 0-94.5 37T225 420v256Zm-45 60h600q24 0 42 18t18 42v80q0 17-11.5 28.5T800 992q-17 0-28.5-11.5T760 952v-56H200v56q0 17-11.5 28.5T160 992q-17 0-28.5-11.5T120 952v-80q0-24 18-42t42-18Zm-15-60V288v388Zm630 0V288v388ZM225 676V420v256Zm510 0V420v256Z"/></svg>
+                        {% elif i.category__name == 'Oziq-Ovqat' %}
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24"><path d="M679 936q-17 0-28.5-11.5T639 896V701q-53-5-91.5-43.5T504 566q0-60 42.5-102.5T649 421q14 0 24 10t10 24q0 14-10 24t-24 10q-39 0-66.5 27.5T555 566q0 37 27.5 64.5T649 658q14 0 24 10t10 24v204h36V560q-53-5-91.5-43.5T616 425q0-60 42.5-102.5T761 280q60 0 102.5 42.5T906 425q0 53-38.5 91.5T776 560v336q0 17-11.5 28.5T736 936H679Zm20-420q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17ZM181 976q-58 0-99.5-41.5T40 835q0-41 20.5-72.5T120 727V360q-35-8-57.5-39T40 255q0-48 34-83t83-35q49 0 83 35t34 83q0 37-22.5 68T235 360v234h30V265q-9-5-15-16t-6-24q0-21 15-36t36-15q21 0 36 15t15 36q0 13-6 24t-15 16v329h30V265q-9-5-15-16t-6-24q0-21 15-36t36-15q21 0 36 15t15 36q0 13-6 24t-15 16v329h30V265q-9-5-15-16t-6-24q0-21 15-36t36-15q21 0 36 15t15 36q0 13-6 24t-15 16v367q38 13 58 44.5t20 72.5q0 58-41.5 99.5T600 976H181Zm0-60h419q33 0 56-23t23-56q0-33-23-56t-56-23H181q-33 0-56 23t-23 56q0 33 23 56t56 23ZM157 319q13 0 21.5-8.5T187 289q0-13-8.5-21.5T157 259q-13 0-21.5 8.5T127 289q0 13 8.5 21.5T157 319Zm151 0q13 0 21.5-8.5T338 289q0-13-8.5-21.5T308 259q-13 0-21.5 8.5T278 289q0 13 8.5 21.5T308 319Zm151 0q13 0 21.5-8.5T489 289q0-13-8.5-21.5T459 259q-13 0-21.5 8.5T429 289q0 13 8.5 21.5T459 319Z"/></svg>
+                       {% elif i.category__name == 'Sayohat' %}
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24"><path d="M774 999l-24-24q-11-11-11-27 0-16 11-27l319-319-57-56-265 265 32 32q11 11 27 11 16 0 27-11l319-319-56-57-319 319q-11 11-27 11-16 0-27-11l-32-32 265-265-56-57-319 319q-11 11-27 11-16 0-27-11l-24-24q-11-11-11-27 0-16 11-27l342-342q11-11 27-11 16 0 27 11l24 24q11 11 11 27 0 16-11 27L346 593l56 57 265-265-32-32q-11-11-11-27 0-16 11-27l342-342q11-11 27-11 16 0 27 11l24 24q11 11 11 27 0 16-11 27l-342 342q-11 11-27 11-16 0-27-11l-24-24q-11-11-11-27 0-16 11-27L670 272q11-11 27-11 16 0 27 11l24 24q11 11 11 27 0 16-11 27L312 761l-57 56 319 319q11 11 11 27 0 16-11 27l-24 24q-11 11-27 11-16 0-27-11Z"/></svg>
+                        {% endif %}
+                        <h3>{{ i.category__name }}  -  {{ i.total_amount }} so'm</h3>
+                    </div>
                 {% endfor %}
-            </ul>
-        </div>
-
-        <div id="expense" class="tab-content">
-            <ul>
-                {% for transaction in transactions %}
-                    {% if transaction.type == 'OUT' %}
-                        <li class="transaction-detail">
-                            <div>{{ transaction.date }}</div>
-                            <div>Chiqim</div>
-                            <div>{{ transaction.amount }} so'm</div>
-                            <div>{{ transaction.hisob }}</div>
-                            <div>{{ transaction.category }}</div>
-                            <div>{{ transaction.description }}</div>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
+            </div>
         </div>
     </div>
 
@@ -237,57 +326,25 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: '#ddd',
-                                borderColor: '#ddd'
-                            },
-                            ticks: {
-                                color: '#333'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                color: '#ddd',
-                                borderColor: '#ddd'
-                            },
-                            ticks: {
-                                color: '#333'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: '#333'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#333',
-                            titleColor: '#fff',
-                            bodyColor: '#fff'
+                            beginAtZero: true
                         }
                     }
                 }
             });
-
-            function showTab(tab) {
-                document.querySelectorAll('.tab').forEach(function(tabElement) {
-                    tabElement.classList.remove('active');
-                });
-                document.querySelectorAll('.tab-content').forEach(function(tabContent) {
-                    tabContent.classList.remove('active');
-                });
-
-                document.querySelector('.tab[onclick="showTab(\'' + tab + '\')"]').classList.add('active');
-                document.getElementById(tab).classList.add('active');
-            }
-
-            window.showTab = showTab;
         });
+
+        function showTab(tabId) {
+            var tabs = document.getElementsByClassName('tab-content');
+            var tabButtons = document.getElementsByClassName('tab');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+                tabButtons[i].classList.remove('active');
+            }
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
     </script>
 </body>
 </html>

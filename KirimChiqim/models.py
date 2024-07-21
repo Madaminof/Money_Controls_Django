@@ -1,35 +1,48 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+class Categories(models.Model):
+    name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'Categories'
+
+
+class HisobType(models.Model):
+    name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'Hisob_type'
 
 
 class Transaction(models.Model):
-    ACCOUNT_TYPES = (
-        ('cash', 'Naqd Pul'),
-        ('card', 'Karta'),
-        ('currency', 'Valuta'),
-    )
 
     TRANSACTION_TYPES = (
         ('IN', 'Kirim'),
         ('OUT', 'Chiqim'),
     )
 
-    CATEGORIES = (
-        ('transport', 'Transport'),
-        ('food', 'Oziq-ovqat'),
-        ('entertainment', 'Ko\'ngil ochar'),
-    )
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
     type = models.CharField(max_length=3, choices=TRANSACTION_TYPES)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    account = models.CharField(max_length=10, choices=ACCOUNT_TYPES)
-    category = models.CharField(max_length=20, choices=CATEGORIES, null=True, blank=True)
+    amount = models.DecimalField(max_digits=10,decimal_places=0)
+    account = models.ForeignKey(HisobType,on_delete=models.CASCADE)
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE)
     description = models.TextField(blank=True)
 
     def __str__(self):
-        return f"{self.date} - {self.type} - {self.amount} - {self.account}"
+        return f"{self.user.username} - {self.date} - {self.type} - {self.amount} - {self.account}"
 
     class Meta:
-        db_table = 'kirim_chiqim'
+        db_table = 'Input_Output'
 
 

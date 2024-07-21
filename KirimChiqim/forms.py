@@ -6,6 +6,7 @@ class TransactionForm(forms.ModelForm):
         model = Transaction
         fields = ['date', 'type', 'amount', 'account', 'category', 'description']
 
+
 from django import forms
 
 class DateRangeForm(forms.Form):
