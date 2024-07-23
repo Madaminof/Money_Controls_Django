@@ -8,6 +8,7 @@ from .forms import TransactionForm, DateRangeForm
 from datetime import timedelta
 from django.utils.timezone import now
 
+
 @login_required
 def index(request):
     user = request.user
@@ -36,18 +37,24 @@ def index(request):
 
 @login_required
 def add_transaction(request):
+    user = request.user
+    transactions = Transaction.objects.filter(user=user)
+    total_income = transactions.filter(type='IN').aggregate(Sum('amount'))['amount__sum'] or 0
+    total_expense = transactions.filter(type='OUT').aggregate(Sum('amount'))['amount__sum'] or 0
+    balance = total_income - total_expense
+
     if request.method == 'POST':
         form = TransactionForm(request.POST)
         if form.is_valid():
             transaction = form.save(commit=False)
             transaction.user = request.user
+            if transaction.type == 'OUT' and transaction.amount > balance:
+                return render(request, 'add_transaction.html', {'form': form, 'error_message': 'Balansingiz yetarli emas. Iltimos, balansingizni to\'ldiring.'})
             transaction.save()
             return redirect('index')
     else:
         form = TransactionForm()
     return render(request, 'add_transaction.html', {'form': form})
-
-
 
 
 @login_required
@@ -64,6 +71,7 @@ def reports(request):
         'balance': balance,
     }
     return render(request, 'reports.html', context)
+
 
 @login_required
 def transactions_by_date_range(request):
@@ -99,6 +107,7 @@ def transactions_by_date_range(request):
         'form': DateRangeForm(initial={'start_date': start_date_str, 'end_date': end_date_str}),
     }
     return render(request, 'kalendar.html', context)
+
 
 @login_required
 def daily_stats(request):
@@ -149,6 +158,7 @@ def weekly_stats(request):
         'weekly_expense': weekly_expense,
         'weekly_transactions': list(weekly_transactions)
     })
+
 
 @login_required
 def monthly_stats(request):
